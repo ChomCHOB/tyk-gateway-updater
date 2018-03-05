@@ -21,23 +21,27 @@ const _createApis = async (docs) => {
     // if (doc.slug ===)
     delete doc._id
     const versions = doc.version_data.versions
+    delete doc.version_data.versions
+    doc.version_data.versions = {}
+
     _.forOwn(versions, version => {
       const base64Name = version.name
       const decodeName = Buffer.from(base64Name, 'base64').toString()
       version.name = decodeName
-
-      // write file
-      const apiSlugName = slug(decodeName)
-      // const tmpDir = (path.isAbsolute(config.tmpDir))
-      //   ? config.tmpDir
-      //   : path.join(process.cwd(), config.tmpDir)
-      const filePath = path.join(config.tyk.appsDirPath, `${apiSlugName}.json`)
-      try {
-        fs.writeFileSync(filePath, JSON.stringify(version, null, 2))
-      } catch (e) {
-        logger.error(`cannot write '${apiSlugName}.json' to file`, e)
-      }
+      doc.version_data.versions[decodeName] = version
     })
+
+    // write file
+    const apiSlugName = slug(doc.name)
+    // const tmpDir = (path.isAbsolute(config.tmpDir))
+    //   ? config.tmpDir
+    //   : path.join(process.cwd(), config.tmpDir)
+    const filePath = path.join(config.tyk.appsDirPath, `${apiSlugName}.json`)
+    try {
+      fs.writeFileSync(filePath, JSON.stringify(doc, null, 2))
+    } catch (e) {
+      logger.error(`cannot write '${apiSlugName}.json' to file`, e)
+    }
   }
 }
 
@@ -77,6 +81,7 @@ const reloadConfig = async () => {
     mongodbUrl += `${config.mongodb.user}:${config.mongodb.passwd}@`
   }
   mongodbUrl += `${config.mongodb.host}:${config.mongodb.port}/${config.mongodb.dbName}`
+  logger.debug(`mongodbUrl: ${mongodbUrl}`)
   logger.debug(collections)
 
   collections.forEach(c => {
