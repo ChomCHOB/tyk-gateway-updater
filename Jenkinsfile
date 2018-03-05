@@ -1,4 +1,4 @@
-def gitUrl = 'https://github.com/ChomCHOB/util-docker'
+def gitUrl = 'https://github.com/ChomCHOB/tyk-gateway-updater'
 def gitBranch = 'refs/heads/master'
 
 def label = "pod.${env.JOB_NAME}".replace('-', '_').replace('/', '_').take(55) + ".${env.BUILD_NUMBER}"
