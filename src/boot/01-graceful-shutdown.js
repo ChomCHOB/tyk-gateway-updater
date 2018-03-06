@@ -1,6 +1,6 @@
 // const DEBUG_DELAY = 2000                  // just for demonstrate that it really doesn't receive requests after 4s
 const logger = global.logger
-// const READINESS_PROBE_DELAY = 1000 // failureThreshold: 2, periodSeconds: 2 (4s)
+const redis = require('./04-redis-sub')
 
 const $ = module.exports
 
@@ -15,6 +15,7 @@ async function gracefulStop () {
 
   try {
     // shutdown mainApp
+    await redis.exit()
 
     // await Promise.delay(5000)
     logger.info(`Successful graceful shutdown`)

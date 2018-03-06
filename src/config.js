@@ -5,10 +5,15 @@ module.exports = () => ({
   logLevel: process.env.LOG_LEVEL || 'info',
   mongodb: {
     host: process.env.MONGODB_HOST || '127.0.0.1',
-    port: process.env.MONGODB_PORT || 27017,
+    port: process.env.MONGODB_PORT || '27017',
     dbName: process.env.MONGODB_DBNAME || 'tyk_analytics',
     user: process.env.MONGODB_USER,
-    passwd: process.env.MONGODB_PASSWD
+    password: process.env.MONGODB_PASSWORD
+  },
+  redis: {
+    host: process.env.REDIS_HOST || '127.0.0.1',
+    port: process.env.REDIS_PORT || '6379',
+    password: process.env.REDIS_PASSWORD
   },
   policyEnabled: String(process.env.POLICY_ENABLED).toLowerCase() === 'true',
   policyColName: process.env.POLICY_COLLECTION_NAME || 'tyk_policies',
