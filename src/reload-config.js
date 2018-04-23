@@ -5,7 +5,7 @@ const Promise = require('bluebird')
 const MongoClient = require('mongodb').MongoClient
 const slug = require('slug')
 const _ = require('lodash')
-// const shell = require('shelljs')
+const shell = require('shelljs')
 const rp = require('request-promise')
 
 const config = require('./config')()
@@ -105,11 +105,29 @@ $._loadConfig = async () => {
 
   let result = await Promise.props(promises)
 
+  function recreateDir (dir) {
+    let result
+    result = shell.mkdir('-rf', dir)
+    if (result.code !== 0) {
+      logger.error(`cannot remove dir at ${config.tmpDir}`, result.stderr)
+      shell.exit(1)
+    }
+    result = shell.mkdir('-p', dir)
+    if (result.code !== 0) {
+      logger.error(`cannot create dir at ${config.tmpDir}`, result.stderr)
+      shell.exit(1)
+    }
+  }
+
   // save config to files
   if (config.apiEnabled) {
+    // remove and create dir
+    recreateDir(config.tyk.appsDirPath)
+
     await $._createApis(result[config.apiColName])
   }
   if (config.policyEnabled) {
+    // remove dir
     await $._createPolicies(result[config.policyColName])
   }
 }

@@ -6,8 +6,8 @@
  */
 const winston = require('winston')
 // Imports the Google Cloud client library for Winston
-// const LoggingWinston = require('@google-cloud/logging-winston').LoggingWinston
-// const _package = require('../package.json')
+const LoggingWinston = require('@google-cloud/logging-winston').LoggingWinston
+const _package = require('../package.json')
 
 winston.emitErrs = false
 
@@ -33,24 +33,28 @@ module.exports = (name = 'main') => {
     label: name,
     level: logLevel
   }
-  // const optsGCPLogging = {
-  //   projectId: process.env.GCP_PROJECT_ID || 'chomchob-sys',
-  //   logName: 'cc-node-crypto-trader',
-  //   prefix: name,
-  //   labels: {
-  //     name: _package.name,
-  //     version: _package.version,
-  //     env: process.env.NODE_ENV || 'local'
-  //   }
-  // }
 
   if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
+    const optsGCPLogging = {
+      projectId: process.env.GCP_PROJECT_ID || 'chomchob-sys',
+      logName: 'tyk-updater',
+      prefix: name,
+      labels: {
+        name: _package.name,
+        version: _package.version,
+        env: process.env.NODE_ENV || 'local'
+      }
+    }
+    if (process.env.HOSTNAME) {
+      optsGCPLogging.labels['pod-name'] = process.env.HOSTNAME
+    }
+
     logger = new winston.Logger({
       level: logLevel,
       transports: [
-        new winston.transports.Console(optsConsole)
+        new winston.transports.Console(optsConsole),
         // Creates a Winston Stackdriver Logging client
-        // new LoggingWinston(optsGCPLogging)
+        new LoggingWinston(optsGCPLogging)
       ],
       exitOnError: false
     })

@@ -3,7 +3,7 @@ const path = require('path')
 const logger = global.logger
 
 module.exports = async (app) => {
-  logger.info('booting...')
+  logger.info(`booting... (env: ${process.env.NODE_ENV})`)
   const AsyncFunction = (async () => {}).constructor
 
   const normalizedPath = path.join(__dirname)
