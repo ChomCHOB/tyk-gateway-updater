@@ -107,7 +107,7 @@ $._loadConfig = async () => {
 
   function recreateDir (dir) {
     let result
-    result = shell.mkdir('-rf', dir)
+    result = shell.rm('-rf', dir)
     if (result.code !== 0) {
       logger.error(`cannot remove dir at ${config.tmpDir}`, result.stderr)
       shell.exit(1)
