@@ -15,6 +15,7 @@ module.exports = () => ({
     port: process.env.REDIS_PORT || '6379',
     password: process.env.REDIS_PASSWORD
   },
+  loadConfigAfterBoot: String(process.env.LOAD_CONFIG_AFTER_BOOT).toLowerCase() === 'true',
   policyEnabled: String(process.env.POLICY_ENABLED).toLowerCase() === 'true',
   policyColName: process.env.POLICY_COLLECTION_NAME || 'tyk_policies',
   apiEnabled: String(process.env.API_ENABLED).toLowerCase() === 'true',

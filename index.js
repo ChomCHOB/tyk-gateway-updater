@@ -5,6 +5,8 @@ global.Promise = require('bluebird')
 global.logger = require('./src/logger')('index')
 const logger = global.logger
 
+const { reloadConfig } = require('./src/reload-config')
+
 const http = require('http')
 const express = require('express')
 
@@ -57,5 +59,10 @@ if (require.main === module) {
       server.on('listening', () => {
         logger.debug(`web server started on port ${server.address().port} at ${server.address().address}`)
       })
+
+      if (config.loadConfigAfterBoot) {
+        logger.debug('loading config after boot')
+        return reloadConfig()
+      }
     })
 }

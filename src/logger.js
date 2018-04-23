@@ -36,7 +36,6 @@ module.exports = (name = 'main') => {
 
   if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
     const optsGCPLogging = {
-      projectId: process.env.GCP_PROJECT_ID || 'chomchob-sys',
       logName: 'tyk-updater',
       prefix: name,
       labels: {
@@ -47,6 +46,9 @@ module.exports = (name = 'main') => {
     }
     if (process.env.HOSTNAME) {
       optsGCPLogging.labels['pod-name'] = process.env.HOSTNAME
+    }
+    if (process.env.GCP_PROJECT_ID) {
+      optsGCPLogging.projectId = process.env.GCP_PROJECT_ID
     }
 
     logger = new winston.Logger({
