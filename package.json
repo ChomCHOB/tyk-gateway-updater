@@ -1,6 +1,6 @@
 {
   "name": "tyk-gateway-updater-sidecar",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Update TYK config",
   "main": "index.js",
   "scripts": {
